@@ -1,13 +1,21 @@
 export default defineContentScript({
   matches: ["*://*/*"],
   main() {
-    console.log('Content script loaded!');
+    console.log("Content script loaded!");
     document.addEventListener("mouseup", () => {
-      const selectedText = window.getSelection().toString().trim();
+      const selected = window.getSelection();
+      const selectedText = selected.toString().trim();
 
-      // Only log if the user actually highlighted text (ignores empty clicks)
       if (selectedText.length > 0) {
         console.log("Highlighted text:", selectedText);
+        const button = document.createElement("button");
+        const rect = selected.getRangeAt(0).getBoundingClientRect();
+        button.textContent = "explain";
+        button.style.position = "fixed";
+        button.style.top = `${rect.bottom + 8}px`;
+        button.style.left = `${rect.left}px`;
+
+        document.body.appendChild(button);
       }
     });
   },
