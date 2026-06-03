@@ -53,11 +53,16 @@ export default defineContentScript({
           console.log("THE CAPTURED TEXT IS", selectedText);
           showPanel("Loading...");
           // send message to service worker
-          const response = await browser.runtime.sendMessage({
-            type: "explain",
-            text: selectedText,
-          });
-          showPanel(response.explanation)
+          try {
+            const response = await browser.runtime.sendMessage({
+              type: "explain",
+              text: selectedText,
+            });
+            showPanel(response.explanation);
+          } catch (err) {
+            showPanel("An error has occurred");
+            console.error(err);
+          }
         });
       }
     });
